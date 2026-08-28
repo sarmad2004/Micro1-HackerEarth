@@ -1,0 +1,42 @@
+{
+  "cpp-adv": {
+    "binary": "cpp/build/agentgate-advanced",
+    "cmds_per_s": 81064.79942877482,
+    "commands": 51000,
+    "max_s": 0.6567790749995766,
+    "mb_per_s": 4.128089802911309,
+    "median_s": 0.629126332999931,
+    "min_s": 0.5575259749998622,
+    "output_bytes": 4679390
+  },
+  "cpp-base": {
+    "binary": "cpp/build/agentgate-baseline",
+    "cmds_per_s": 282189.56103687297,
+    "commands": 51000,
+    "max_s": 0.19519279800033473,
+    "mb_per_s": 14.370033079867696,
+    "median_s": 0.1807295769999655,
+    "min_s": 0.1366909990001659,
+    "output_bytes": 4172990
+  },
+  "rs-adv": {
+    "binary": "rust/target/release/agentgate-advanced",
+    "cmds_per_s": 112000.84976586119,
+    "commands": 51000,
+    "max_s": 0.459133956000187,
+    "mb_per_s": 5.703456606243538,
+    "median_s": 0.4553536879998319,
+    "min_s": 0.37651647499978935,
+    "output_bytes": 4679390
+  },
+  "rs-base": {
+    "binary": "rust/target/release/agentgate-baseline",
+    "cmds_per_s": 373155.56884922396,
+    "commands": 51000,
+    "max_s": 0.15693309700009195,
+    "mb_per_s": 19.00232541769865,
+    "median_s": 0.13667222000003676,
+    "min_s": 0.11838563799983604,
+    "output_bytes": 4172990
+  }
+}

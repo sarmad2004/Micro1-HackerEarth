@@ -1,0 +1,17 @@
+[package]
+name = "agentgate-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+agentgate-core = { path = "../agentgate-core" }
+
+[[bin]]
+name = "agentgate-baseline"
+path = "src/bin/baseline.rs"
+
+[[bin]]
+name = "agentgate-advanced"
+path = "src/bin/advanced.rs"

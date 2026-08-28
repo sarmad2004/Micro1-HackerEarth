@@ -1,0 +1,11 @@
+[package]
+name = "agentgate-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Shell command safety analysis for autonomous coding agents"
+
+# Intentionally zero dependencies: the build must succeed with no network
+# access, which is a hard requirement of the reproducibility gate.
+[dependencies]

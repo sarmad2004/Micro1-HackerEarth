@@ -1,0 +1,11 @@
+# Build outputs
+cpp/build/
+rust/target/
+dist/
+
+# Editor and OS noise
+*.swp
+*~
+.DS_Store
+.idea/
+.vscode/

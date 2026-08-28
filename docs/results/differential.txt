@@ -1,0 +1,5 @@
+differential: 25202 inputs (corpus + 25000 generated, seed 20260828)
+  baseline   IDENTICAL  (1942051 bytes, 25202 records)
+  advanced   IDENTICAL  (2077920 bytes, 25202 records)
+
+OK: every pair agrees byte-for-byte

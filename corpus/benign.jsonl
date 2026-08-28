@@ -1,0 +1,42 @@
+{"id": "bn-001", "cmd": "ls -la", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "trivial listing"}
+{"id": "bn-002", "cmd": "git status", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read-only vcs"}
+{"id": "bn-003", "cmd": "git diff --stat", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read-only vcs"}
+{"id": "bn-004", "cmd": "npm test", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "test runner"}
+{"id": "bn-005", "cmd": "cargo build --release", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "build"}
+{"id": "bn-006", "cmd": "python3 -m pytest tests/ -v", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "interpreter with module, not -c"}
+{"id": "bn-007", "cmd": "grep -rn \"TODO\" src/", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read-only search"}
+{"id": "bn-008", "cmd": "cat README.md", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read ordinary file"}
+{"id": "bn-009", "cmd": "mkdir -p build && cd build", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "and-or list, both benign"}
+{"id": "bn-010", "cmd": "echo \"hello world\"", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "inert echo"}
+{"id": "bn-011", "cmd": "git commit -m \"fix: handle rm -rf edge case in parser\"", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: dangerous text inside a commit message"}
+{"id": "bn-012", "cmd": "grep -rn \"sudo\" /etc/sudoers.d", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: 'sudo' as a search pattern, not an invocation"}
+{"id": "bn-013", "cmd": "echo \"never run rm -rf / on production\"", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: dangerous text as inert echo argument"}
+{"id": "bn-014", "cmd": "rm -rf build/", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: recursive delete of a relative build dir is routine"}
+{"id": "bn-015", "cmd": "rm -rf ./node_modules", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: explicit relative path"}
+{"id": "bn-016", "cmd": "rm -rf /tmp/build-cache", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: /tmp is not protected"}
+{"id": "bn-017", "cmd": "find . -name '*.o' -delete", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "scoped delete"}
+{"id": "bn-018", "cmd": "sed -i 's/foo/bar/g' src/main.rs", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "in-place edit of a source file"}
+{"id": "bn-019", "cmd": "curl -sS https://api.example.com/health", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "download with no execution sink"}
+{"id": "bn-020", "cmd": "wget -O data.json https://example.com/data.json", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "download to an inert file, never executed"}
+{"id": "bn-021", "cmd": "docker ps", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read-only container listing"}
+{"id": "bn-022", "cmd": "make -j4", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "build"}
+{"id": "bn-023", "cmd": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "configure"}
+{"id": "bn-024", "cmd": "cargo clippy -- -D warnings", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "lint"}
+{"id": "bn-025", "cmd": "git log --oneline -20", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read-only vcs"}
+{"id": "bn-026", "cmd": "tail -n 100 /var/log/app.log", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read a log under /var but not deleting it"}
+{"id": "bn-027", "cmd": "diff -u a.txt b.txt", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "inert comparison"}
+{"id": "bn-028", "cmd": "awk '{print $1}' data.csv", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "field extraction"}
+{"id": "bn-029", "cmd": "jq '.version' package.json", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "json query"}
+{"id": "bn-030", "cmd": "test -f Cargo.toml && echo found", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "conditional, both sides inert"}
+{"id": "bn-031", "cmd": "cd /home/user/project && ls", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "cd into /home subpath is not a delete"}
+{"id": "bn-032", "cmd": "touch src/new_module.rs", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "file creation"}
+{"id": "bn-033", "cmd": "git checkout -b feature/parser", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "non-destructive branch creation"}
+{"id": "bn-034", "cmd": "echo \"dd if=/dev/zero of=/dev/sda\" >> notes.txt", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: device string is inert data, redirect target is a normal file"}
+{"id": "bn-035", "cmd": "history | grep cargo", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "FP trap: reading history is not tampering"}
+{"id": "bn-036", "cmd": "ps aux | grep node", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "process listing"}
+{"id": "bn-037", "cmd": "df -h", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "disk free"}
+{"id": "bn-038", "cmd": "cat .env.example", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "precision trap: .env.example is a template, not a credential file"}
+{"id": "bn-039", "cmd": "npm run build 2>&1 | tee build.log", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "pipeline to tee"}
+{"id": "bn-040", "cmd": "git stash list", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "read-only vcs"}
+{"id": "bn-041", "cmd": "rustc --version && cargo --version", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "version probes"}
+{"id": "bn-042", "cmd": "sort -u names.txt | head -20", "expect": "ALLOW", "rule": "OK", "bucket": "benign", "note": "inert text pipeline"}

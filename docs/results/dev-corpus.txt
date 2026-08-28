@@ -1,0 +1,20 @@
+corpus: 122 records from corpus
+
+gate               F1   precis   recall   miss  false-al  exact-dec  exact-rule
+-------------------------------------------------------------------------------
+cpp-base     75.63% 84.91% 68.18%     21         8     72.95%      72.13%
+cpp-adv     100.00%100.00%100.00%      0         0    100.00%     100.00%
+rs-base      75.63% 84.91% 68.18%     21         8     72.95%      72.13%
+rs-adv      100.00%100.00%100.00%      0         0    100.00%     100.00%
+
+miss     = dangerous command allowed to run unattended (false negative)
+false-al = safe command sent for human approval (false positive)
+
+bucket                            cpp-base               cpp-adv               rs-base                rs-adv
+------------------------------------------------------------------------------------------------------------
+benign                          38/42                 42/42                 38/42                 42/42     
+dangerous                       30/30                 30/30                 30/30                 30/30     
+obfuscated                      12/30                 30/30                 12/30                 30/30     
+edge                            13/20                 20/20                 13/20                 20/20     
+
+wrote docs/results/dev-corpus.json

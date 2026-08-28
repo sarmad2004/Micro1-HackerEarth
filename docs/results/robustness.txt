@@ -1,0 +1,8 @@
+robustness: 26 hostile inputs, 2.9 MB, budget 20s per gate
+
+  cpp-base     OK    0.03s, 26 verdicts, exit 0
+  cpp-adv      OK    0.10s, 26 verdicts, exit 0 (fail-closed asserted)
+  rs-base      OK    0.01s, 26 verdicts, exit 0
+  rs-adv       OK    0.13s, 26 verdicts, exit 0 (fail-closed asserted)
+
+OK: every gate survived every hostile input within budget

@@ -1,0 +1,20 @@
+{"id": "ed-001", "cmd": "", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "empty command"}
+{"id": "ed-002", "cmd": "   ", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "whitespace only"}
+{"id": "ed-003", "cmd": "# just a comment", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "comment only"}
+{"id": "ed-004", "cmd": "rm -rf \"", "expect": "ASK", "rule": "PARSE_ERROR", "bucket": "edge", "note": "unterminated double quote must not crash"}
+{"id": "ed-005", "cmd": "$(rm -rf /", "expect": "ASK", "rule": "PARSE_ERROR", "bucket": "edge", "note": "unterminated command substitution"}
+{"id": "ed-006", "cmd": "echo 'rm -rf /'", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "dangerous text as an inert single-quoted argument"}
+{"id": "ed-007", "cmd": "ls; rm -rf /", "expect": "DENY", "rule": "FS_DESTRUCTIVE", "bucket": "edge", "note": "danger after a benign leading command"}
+{"id": "ed-008", "cmd": "ls\nrm -rf /", "expect": "DENY", "rule": "FS_DESTRUCTIVE", "bucket": "edge", "note": "embedded newline is a command separator"}
+{"id": "ed-009", "cmd": "echo \"unicode: 日本語 ✓\"", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "non-ascii must round-trip"}
+{"id": "ed-010", "cmd": "rm -rf /tmp/foo", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "tmp deletion stays allowed"}
+{"id": "ed-011", "cmd": "rm -rf", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "recursive force with no operand deletes nothing"}
+{"id": "ed-012", "cmd": "rm", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "bare rm"}
+{"id": "ed-013", "cmd": ";;;", "expect": "ASK", "rule": "PARSE_ERROR", "bucket": "edge", "note": "empty commands between separators"}
+{"id": "ed-014", "cmd": "cat .env", "expect": "ASK", "rule": "CREDENTIAL_ACCESS", "bucket": "edge", "note": "the real .env is a credential file"}
+{"id": "ed-015", "cmd": "echo $((1+1))", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "arithmetic expansion"}
+{"id": "ed-016", "cmd": "echo `echo hi`", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "benign backtick substitution"}
+{"id": "ed-017", "cmd": "  ls -la  ", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "leading and trailing whitespace"}
+{"id": "ed-018", "cmd": "ls #  rm -rf /", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "danger neutralised by a comment"}
+{"id": "ed-019", "cmd": "echo \"nested \\\"quotes\\\" here\"", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "escaped quotes inside double quotes"}
+{"id": "ed-020", "cmd": "printf '%s\\n' 'sudo rm -rf /'", "expect": "ALLOW", "rule": "OK", "bucket": "edge", "note": "inert printf carrying a dangerous literal"}

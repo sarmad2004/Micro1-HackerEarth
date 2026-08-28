@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = ["crates/agentgate-core", "crates/agentgate-cli"]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.70"
+license = "MIT"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"

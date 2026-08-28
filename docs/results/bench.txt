@@ -1,0 +1,13 @@
+workload: 51000 commands (2.6 MB), 3 rounds, median reported
+
+gate                cmds/sec    MB/sec   median s    min s    max s
+-------------------------------------------------------------------
+cpp-base             282,190      14.4      0.181    0.137    0.195
+cpp-adv               81,065       4.1      0.629    0.558    0.657
+rs-base              373,156      19.0      0.137    0.118    0.157
+rs-adv               112,001       5.7      0.455    0.377    0.459
+
+Includes process startup and full JSON Lines encode/decode on both sides,
+so these are end-to-end figures, not analyzer-only microbenchmarks.
+
+wrote docs/results/bench.json
