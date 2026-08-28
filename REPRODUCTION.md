@@ -67,9 +67,14 @@ This builds both implementations and runs every check: unit tests, both
 evaluation corpora, cross-language conformance, and the robustness stress. It
 prints `All checks passed.` and exits 0 on success, non-zero on any failure.
 
-**Runtime: about 60 seconds**, dominated by the Rust release build (~35 s
-cold). Rebuilds take about 15 s. Zero cost — no API calls, no model inference,
-no network.
+**Runtime: about 15 seconds** from a clean checkout on the reference machine
+(measured at 12.2 s), dominated by compilation. Subsequent runs are faster
+still. Zero cost — no API calls, no model inference, no network, no
+dependencies to download.
+
+This exact sequence was verified by extracting `dist/agentgate-submission.zip`
+into an empty directory and running `make verify` there: every number in
+`docs/RESULTS.md` reproduced identically.
 
 ---
 
@@ -78,13 +83,13 @@ no network.
 If you would rather run the stages individually:
 
 ```bash
-make build           # ~45 s cold: cmake + cargo release builds
-make test            # ~2 s:  224 C++ assertions, 75 Rust tests
+make build           # ~9 s cold: cmake + cargo release builds
+make test            # ~1 s:  224 C++ assertions, 75 Rust tests
 make eval            # ~1 s:  score all four gates on the development corpus
 make eval-heldout    # ~1 s:  score all four gates on the held-out set
-make differential    # ~4 s:  assert C++ and Rust agree byte-for-byte
-make robustness      # ~2 s:  attack every resource bound
-make bench           # ~15 s: throughput benchmark
+make differential    # ~2 s:  assert C++ and Rust agree byte-for-byte
+make robustness      # ~1 s:  attack every resource bound
+make bench           # ~5 s:  throughput benchmark
 ```
 
 `make help` lists these. `make clean` removes all build output.
