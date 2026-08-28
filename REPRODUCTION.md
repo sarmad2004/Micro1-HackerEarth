@@ -116,8 +116,14 @@ normalisation was added after a Windows run reported `gate binary not found`
 for a binary that was sitting right there; the `.exe` suffix itself is resolved
 automatically and never needs to be written out.
 
-Verified on Windows 11 with rustc 1.98.0 (MSVC) and Python 3.11.9: all four F1
-figures below reproduce digit for digit against the Linux reference.
+Verified on Windows 11 with rustc 1.98.0 (MSVC), CMake and Python 3.11.9: all
+four F1 figures below reproduce digit for digit against the Linux reference, on
+both the Rust and the C++ binaries, and the cross-language differential passes.
+
+That run also exposed two defects, both since fixed: MSVC opened stdout in text
+mode and emitted CRLF, breaking the byte-identity requirement of `SPEC.md` §2.2,
+and `differential.py` could not see it because `splitlines()` normalised the
+line endings before comparing.
 
 The C++ side additionally needs CMake and the MSVC C++ build tools
 (`winget install Kitware.CMake`, plus `Microsoft.VisualStudio.2022.BuildTools`
@@ -214,9 +220,25 @@ OK: every gate survived every hostile input within budget
 
 ### `make bench`
 
-Throughput is hardware-dependent. On the reference machine the advanced tier
-runs at ~112,000 commands/sec and the baseline at ~373,000. Expect the *ratio*
-(roughly 3–4×) to hold; the absolute numbers will not.
+Throughput is hardware-dependent. On the reference Linux machine the advanced
+tier runs at ~112,000 commands/sec and the baseline at ~373,000, a ratio of
+roughly 3–4×.
+
+**The ratio is not platform-independent, despite what an earlier version of
+this file claimed.** `bench.py` times `subprocess.run` end to end, so process
+spawn, pipe transfer and JSON framing are a shared constant inside both
+figures. Where that constant is large relative to CPU, it compresses the ratio
+toward 1. Measured on Windows 11: 1.92× / 2.11× / 2.25× across three runs, with
+the ratio rising as the machine warmed up — and a same-record-count, no-analysis
+payload put the floor at ~0.22 s against totals of 0.31 s (baseline) and 0.70 s
+(advanced), so roughly 70% of the baseline's measured time is not analysis at
+all.
+
+Treat the absolute numbers and the ratio as indicative on any machine that is
+not the reference one. The durable claim is the weaker one: full parsing costs a
+few times a substring scan and still runs several orders of magnitude faster
+than an agent can issue commands. Only the accuracy figures are exact across
+platforms.
 
 ---
 

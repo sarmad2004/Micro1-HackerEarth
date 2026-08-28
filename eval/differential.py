@@ -179,6 +179,18 @@ def main() -> int:
             if la != lb:
                 divergences.append((repr(inputs[idx]) if idx < len(inputs) else f"#{idx}", la, lb))
 
+        # The raw bytes differ but every record matches, so the difference is in
+        # the framing rather than in any verdict. `splitlines` normalises line
+        # endings, which would otherwise let a CRLF/LF mismatch report zero
+        # divergences and pass -- exactly the false pass this check exists to
+        # prevent. SPEC.md section 2.2 requires byte identity, so this fails.
+        if not divergences:
+            divergences.append((
+                "<line endings / framing: every record matches, raw bytes do not>",
+                f"{len(out_a)} bytes, {out_a.count(13)} CR, {out_a.count(10)} LF",
+                f"{len(out_b)} bytes, {out_b.count(13)} CR, {out_b.count(10)} LF",
+            ))
+
         total_divergences += len(divergences)
         print(f"  {name:<10} DIVERGED   {len(divergences)} differing records")
         for cmd, la, lb in divergences[: args.max_report]:

@@ -249,5 +249,12 @@ Rust's Unicode-aware `is_alphanumeric` and `char::is_whitespace` would disagree
 with the C++ byte-wise equivalents on non-ASCII input. Shell variable names are
 ASCII by definition, so this is also the correct shell semantics.
 
+Byte identity also constrains *framing*, not only verdicts. An implementation
+MUST write `\n` and never `\r\n`. On Windows the C runtime opens stdout in
+text mode and rewrites every newline, so the C++ binaries put stdout into
+binary mode before producing output; `eval/differential.py` treats a raw-byte
+difference with no differing record as a framing divergence and fails, rather
+than letting line-ending normalisation hide it.
+
 The gate performs no I/O beyond stdin/stdout and never executes, resolves, or
 stats the command it analyzes.

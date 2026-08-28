@@ -171,7 +171,16 @@ OK: every pair agrees byte-for-byte
 
 Verified byte-identical across seeds 1, 5, 7, 99, 424242 and 20260828 —
 over 100,000 generated inputs in total, plus the full corpus, plus 30 pinned
-structural edge cases.
+structural edge cases. Independently reproduced on Windows 11 with MSVC and
+rustc 1.98.0.
+
+That Windows run found a third bug, in the harness itself. MSVC opens stdout in
+text mode and rewrote every `\n` as CRLF, so the C++ output genuinely was not
+byte-identical to Rust — and `differential.py` printed `OK` regardless, because
+`splitlines()` normalised the line endings before comparing records. The check
+could not detect the one thing it exists to detect. The C++ binaries now set
+binary mode explicitly, and a raw-byte difference with no differing record is
+reported as a framing divergence and fails.
 
 Two independently written implementations checking each other found bugs that
 neither test suite did. Both were real:
@@ -237,9 +246,14 @@ the gate's contribution to latency is roughly one part in a hundred thousand.
 The interesting result is not that the advanced tier is fast — it is that the
 performance argument for the naive approach does not survive measurement.
 
-These are the only machine-dependent numbers in this document, and they move a
-few percent between runs even on the same host. The *ratio* is the durable
-result; treat the absolute figures as indicative.
+These are the only machine-dependent numbers in this document. **The ratio is
+machine-dependent too**, which an earlier draft got wrong: `bench.py` times
+`subprocess.run` end to end, so spawn and pipe cost is a shared constant inside
+both figures and compresses the ratio wherever that constant is large. Windows
+11 measured 1.92× / 2.11× / 2.25×, with ~70% of the baseline's time attributable
+to process overhead rather than analysis. The durable claim is the weaker one:
+parsing costs a few times a substring scan, and both are far faster than any
+agent can issue commands.
 
 ---
 
