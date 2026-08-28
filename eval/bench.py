@@ -64,6 +64,8 @@ def main() -> int:
     results: dict[str, dict] = {}
     for spec in args.gate:
         name, path = spec.split("=", 1)
+        # Windows cannot launch a relative forward-slash path; see eval/evaluate.py.
+        path = os.path.normpath(path)
         times: list[float] = []
         out_len = 0
         for _ in range(args.rounds):

@@ -94,6 +94,36 @@ make bench           # ~5 s:  throughput benchmark
 
 `make help` lists these. `make clean` removes all build output.
 
+### Windows
+
+`make` is not usually available on Windows, and the `Makefile` uses `>/dev/null`
+and `rm -rf`, so it wants a Unix shell. Run the stages directly instead:
+
+```powershell
+winget install Rustlang.Rustup      # then open a fresh shell for PATH
+cd rust; cargo build --release; cd ..
+cd rust; cargo test; cd ..
+python eval/evaluate.py --gate base=rust/target/release/agentgate-baseline --gate adv=rust/target/release/agentgate-advanced
+python eval/evaluate.py --corpus corpus/heldout --gate base=rust/target/release/agentgate-baseline --gate adv=rust/target/release/agentgate-advanced
+python eval/robustness.py --gate base=rust/target/release/agentgate-baseline --gate adv=rust/target/release/agentgate-advanced --fail-closed-gate adv
+```
+
+Forward slashes in the `--gate` paths are correct on every platform. The eval
+scripts call `os.path.normpath` on each gate path, because Windows refuses to
+launch a *relative* forward-slash path through `subprocess.run` even when the
+file exists — and it fails identically with or without an `.exe` suffix. That
+normalisation was added after a Windows run reported `gate binary not found`
+for a binary that was sitting right there; the `.exe` suffix itself is resolved
+automatically and never needs to be written out.
+
+Verified on Windows 11 with rustc 1.98.0 (MSVC) and Python 3.11.9: all four F1
+figures below reproduce digit for digit against the Linux reference.
+
+The C++ side additionally needs CMake and the MSVC C++ build tools
+(`winget install Kitware.CMake`, plus `Microsoft.VisualStudio.2022.BuildTools`
+with the "Desktop development with C++" workload). MSVC places binaries in
+`cpp\build\Release\` rather than `cpp/build/`.
+
 ### Building without Make
 
 ```bash

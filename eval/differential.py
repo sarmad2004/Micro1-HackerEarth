@@ -117,7 +117,13 @@ def build_inputs(corpus_dir: str, fuzz: int, seed: int) -> list[str]:
     return cmds + generated
 
 
+def gate_path(spec: str) -> str:
+    """Normalise a gate path for the host platform; see eval/evaluate.py."""
+    return os.path.normpath(spec)
+
+
 def run(binary: str, payload: bytes) -> bytes:
+    binary = gate_path(binary)
     try:
         proc = subprocess.run(
             [binary], input=payload, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=180

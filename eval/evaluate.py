@@ -52,8 +52,21 @@ def load_corpus(corpus_dir: str) -> list[dict]:
     return records
 
 
+def gate_path(spec: str) -> str:
+    """Normalise a gate path for the host platform.
+
+    Windows cannot launch a *relative* path written with forward slashes:
+    subprocess.run(["rust/target/release/agentgate-baseline"]) raises
+    FileNotFoundError there, while the backslash spelling works with or without
+    the .exe suffix. normpath converts separators on Windows and is a no-op on
+    POSIX, so a single documented command line works on both.
+    """
+    return os.path.normpath(spec)
+
+
 def run_gate(binary: str, records: list[dict]) -> tuple[dict[str, dict], float]:
     """Feed the corpus to a gate binary and collect its verdicts."""
+    binary = gate_path(binary)
     payload = "".join(
         json.dumps({"id": r["id"], "cmd": r["cmd"]}, ensure_ascii=False) + "\n" for r in records
     )

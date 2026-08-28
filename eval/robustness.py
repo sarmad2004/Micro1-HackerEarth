@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -108,6 +109,8 @@ def main() -> int:
     failures = 0
     for spec in args.gate:
         name, path = spec.split("=", 1)
+        # Windows cannot launch a relative forward-slash path; see eval/evaluate.py.
+        path = os.path.normpath(path)
         started = time.perf_counter()
         try:
             proc = subprocess.run(
