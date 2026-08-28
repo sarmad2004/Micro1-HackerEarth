@@ -34,11 +34,6 @@ void check(bool cond, const char* expr, const char* file, int line, const std::s
 
 using namespace agentgate;
 
-Decision dec(const std::string& c) { return analyze_advanced(c).decision; }
-Rule rul(const std::string& c) { return analyze_advanced(c).rule; }
-
-std::string rule_name(const std::string& c) { return to_string(analyze_advanced(c).rule); }
-
 void expect_rule(const std::string& cmd, Rule want, const char* file, int line) {
   const Verdict v = analyze_advanced(cmd);
   const bool ok = v.rule == want;
@@ -376,10 +371,6 @@ void test_policy() {
 
   EXPECT_RULE("sudo rm -rf /usr", Rule::FsDestructive);
   EXPECT_RULE("sudo apt-get install -y nginx", Rule::PrivilegeEscalation);
-
-  (void)dec;
-  (void)rul;
-  (void)rule_name;
 }
 
 // --- Advanced policy, v1.1 rules -------------------------------------------

@@ -174,7 +174,10 @@ over 100,000 generated inputs in total, plus the full corpus, plus 30 pinned
 structural edge cases. Independently reproduced on Windows 11 with MSVC and
 rustc 1.98.0.
 
-That Windows run found a third bug, in the harness itself. MSVC opens stdout in
+That Windows run found a third bug, in the harness itself, and a re-run
+confirmed the fix: both pairs now report `IDENTICAL`, and a raw-byte capture
+of all 170 corpus records through each binary returns `CR=0, LF=170`, byte-
+identical per tier — checked without going through the harness. MSVC opens stdout in
 text mode and rewrote every `\n` as CRLF, so the C++ output genuinely was not
 byte-identical to Rust — and `differential.py` printed `OK` regardless, because
 `splitlines()` normalised the line endings before comparing records. The check

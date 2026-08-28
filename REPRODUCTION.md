@@ -120,10 +120,19 @@ Verified on Windows 11 with rustc 1.98.0 (MSVC), CMake and Python 3.11.9: all
 four F1 figures below reproduce digit for digit against the Linux reference, on
 both the Rust and the C++ binaries, and the cross-language differential passes.
 
-That run also exposed two defects, both since fixed: MSVC opened stdout in text
-mode and emitted CRLF, breaking the byte-identity requirement of `SPEC.md` §2.2,
-and `differential.py` could not see it because `splitlines()` normalised the
-line endings before comparing.
+That run exposed three defects, all since fixed, and a re-run confirmed each
+fix: relative forward-slash gate paths would not launch; MSVC opened stdout in
+text mode and emitted CRLF, breaking the byte-identity requirement of
+`SPEC.md` §2.2; and `differential.py` could not see that, because
+`splitlines()` normalised the line endings before comparing records — so it
+printed `OK: every pair agrees byte-for-byte` and exited 0 on output that was
+not byte-identical.
+
+The re-run on Windows now reports `IDENTICAL` for both pairs, and a direct
+raw-byte capture of all 170 corpus records through each of the four binaries
+returns `CR=0, LF=170` with the C++ and Rust outputs byte-identical per tier —
+verified independently of the differential harness rather than trusting its own
+report.
 
 The C++ side additionally needs CMake and the MSVC C++ build tools
 (`winget install Kitware.CMake`, plus `Microsoft.VisualStudio.2022.BuildTools`
